@@ -83,39 +83,14 @@ def drive(cfg, model_path=None, use_joystick=False, model_type=None, camera_type
             outputs=['cam/image_array'])
 
     else:
-        print("cfg.CAMERA_TYPE", cfg.CAMERA_TYPE)
-        if cfg.DONKEY_GYM:
-            from donkeycar.parts.dgym import DonkeyGymEnv 
-        
-        inputs = []
-        threaded = True
-        print("cfg.CAMERA_TYPE", cfg.CAMERA_TYPE)
-        if cfg.DONKEY_GYM:
-            from donkeycar.parts.dgym import DonkeyGymEnv 
-            cam = DonkeyGymEnv(cfg.DONKEY_SIM_PATH, env_name=cfg.DONKEY_GYM_ENV_NAME)
-            threaded = True
-            inputs = ['angle', 'throttle']
-        elif cfg.CAMERA_TYPE == "PICAM":
-            from donkeycar.parts.camera import PiCamera
-            cam = PiCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
-        elif cfg.CAMERA_TYPE == "WEBCAM":
-            from donkeycar.parts.camera import Webcam
-            cam = Webcam(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
-        elif cfg.CAMERA_TYPE == "CVCAM":
-            from donkeycar.parts.cv import CvCam
-            cam = CvCam(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
-        elif cfg.CAMERA_TYPE == "CSIC":
-            from donkeycar.parts.camera import CSICamera
-            cam = CSICamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH, framerate=cfg.CAMERA_FRAMERATE, gstreamer_flip=cfg.CSIC_CAM_GSTREAMER_FLIP_PARM)
+       
         elif cfg.CAMERA_TYPE == "V4L":
             from donkeycar.parts.camera import V4LCamera
             cam = V4LCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH, framerate=cfg.CAMERA_FRAMERATE)
         elif cfg.CAMERA_TYPE == "MOCK":
             from donkeycar.parts.camera import MockCamera
             cam = MockCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
-        else:
-            raise(Exception("Unkown camera type: %s" % cfg.CAMERA_TYPE))
-            
+         
         V.add(cam, inputs=inputs, outputs=['cam/image_array'], threaded=threaded)
         
     if use_joystick or cfg.USE_JOYSTICK_AS_DEFAULT:
